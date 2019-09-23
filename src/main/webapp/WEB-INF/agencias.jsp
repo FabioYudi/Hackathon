@@ -1,0 +1,237 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+<html lang="pt-br">
+    <head>
+        <title>Agências - Santander</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="icon" type="image/x-icon" href="../resources/images/favicon.png">
+        <link rel="stylesheet" href="../resources/css/styles.css">
+        <link href="https://fonts.googleapis.com/css?family=Fira+Sans:200&display=swap" rel="stylesheet">
+
+        <style>
+         
+            
+        </style>
+
+    </head>
+    <body>
+        <div id="div_header" class="div_header">
+           <img id="img_header" src="../resources/images/header.png" class="img_header"></img>
+        </div>
+        <div id="div_content" class="div_content">
+            <div id="div_content_pesquisa" class="div_content_pesquisa">
+                <div>
+                    <h2>Encontre uma agência</h2>
+                    <form style="position: relative;">
+                        <input id="txt_pesquisa" name="txt_pesquisa" type="text" placeholder="Digite o CEP, endereço ou agência" class="txt_pesquisa" maxlength="20" onkeydown="validaPesquisa();" onkeyup="validaPesquisa();">
+                        <div id="div_submit" class="div_submit">
+                            <div  id="div_submit_botoes" class="div_submit_botoes">
+                                <img src="../resources/images/seta.png"           id="btn_seta"              class="btn_seta"          onclick="validaPesquisa();">
+                                <img src="../resources/images/seta-vermelha.png"  id="btn_seta_vermelha"     class="btn_seta_vermelha">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div _ngcontent-c23="" class="sidebar-list-container" >
+                    <loader _ngcontent-c23="" _nghost-c26=""></loader>
+                    <div _ngcontent-c23="" class="list-content"     style="padding-right: 30px;">
+                        <p _ngcontent-c23="" class="label">Resultados</p>
+                        <div _ngcontent-c23="" class="list-item">
+                            <div _ngcontent-c23="" class="col-9 col-lg-8 item-content">
+                                <p _ngcontent-c23="">AV CORIFEU DE AZEVEDO MARQUES, 5963</p>
+                                <p _ngcontent-c23="" class="description">VILA LAGEADO</p>
+                            </div>
+                            <div _ngcontent-c23="" class="col-3 col-lg-4 item-segment">
+                                <img _ngcontent-c23="" src="../resources/images/logo-agency-default.svg"></img>
+                            </div>
+                        </div>
+                        <div _ngcontent-c23="" class="list-item">
+                            <div _ngcontent-c23="" class="col-9 col-lg-8 item-content">
+                                <p _ngcontent-c23="">RUA DEP.EMILIO CARLOS, 1388</p>
+                                <p _ngcontent-c23="" class="description">VILA CAMPESINA</p>
+                            </div>
+                            <div _ngcontent-c23="" class="col-3 col-lg-4 item-segment">
+                                <img _ngcontent-c23="" src="../resources/images/logo-agency-default.svg">
+                            </div>
+                        </div>
+                        <div _ngcontent-c23="" class="list-item">
+                          <div _ngcontent-c23="" class="col-9 col-lg-8 item-content">
+                              <p _ngcontent-c23="">RUA DEP.EMILIO CARLOS, 1388</p>
+                              <p _ngcontent-c23="" class="description">VILA CAMPESINA</p>
+                          </div>
+                          <div _ngcontent-c23="" class="col-3 col-lg-4 item-segment">
+                              <img _ngcontent-c23="" src="../resources/images/logo-agency-select.svg">
+                          </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            <div id="map" style="width: 65%;"></div>
+        </div>
+    </body>    
+</html>
+
+<script>
+
+    function validaPesquisa(){
+
+        let pesquisa          = document.getElementById('txt_pesquisa');
+        let btn_seta          = document.getElementById('btn_seta');
+        let btn_seta_vermelha = document.getElementById('btn_seta_vermelha');
+        
+        let valor       = pesquisa.value;
+        let tamanho     = valor.length;
+        
+        if(tamanho == 0){
+          btn_seta.style.display = "block";
+          btn_seta_vermelha.style.display = "none";
+          return false;
+        } else {
+          
+            if(isNumber(valor.replace('-',''))){
+                if(tamanho > 4 && tamanho < 9){
+                  mascara(pesquisa,'#####-###');                  
+                  pesquisa.maxLength = 9;
+                } else {
+                  pesquisa.maxLength = 5;
+                }
+
+                if(tamanho == 4 || tamanho == 9){
+                  btn_seta.style.display = "none";
+                  btn_seta_vermelha.style.display = "block";
+                }else{
+                  btn_seta.style.display = "block";
+                  btn_seta_vermelha.style.display = "none";
+                }
+                
+            }else{
+              pesquisa.maxLength = 20;
+
+              if(tamanho => 4){
+                btn_seta.style.display = "none";
+                btn_seta_vermelha.style.display = "block";
+              }else{
+                btn_seta.style.display = "block";
+                btn_seta_vermelha.style.display = "none";
+              }
+            }
+        }
+    }
+
+    function mascara(t, mask){
+      var i = t.value.length;
+      var saida = mask.substring(1,0);
+      var texto = mask.substring(i)
+      if (texto.substring(0,1) != saida){
+        t.value += texto.substring(0,1);
+      }
+    }
+
+    function isNumber(n) {
+
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+</script>
+<script>
+        var map;
+        function initMap() {
+          map = new google.maps.Map(
+              document.getElementById('map'),
+              {
+                  center: new google.maps.LatLng(-23.545381, -46.633452), 
+                  zoom: 10
+              }
+          );
+  
+          var iconBase =
+              'https://developers.google.com/maps/documentation/javascript/examples/full/images/';
+  
+          var icons = {
+            parking: {
+              icon: iconBase + 'parking_lot_maps.png'
+            },
+            library: {
+              icon: iconBase + 'library_maps.png'
+            },
+            info: {
+              icon: iconBase + 'info-i_maps.png'
+            },
+            brq: {
+              icon: '../resources/images/logo_brq.png'              
+            }
+          };
+  
+          var features = [
+            {
+              position: new google.maps.LatLng(-23.545381, -46.633452),
+              type: 'brq'              
+            }, {
+              position: new google.maps.LatLng(-33.91539, 151.22820),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91747, 151.22912),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91910, 151.22907),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91725, 151.23011),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91872, 151.23089),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91784, 151.23094),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91682, 151.23149),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91790, 151.23463),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91666, 151.23468),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.916988, 151.233640),
+              type: 'info'
+            }, {
+              position: new google.maps.LatLng(-33.91662347903106, 151.22879464019775),
+              type: 'parking'
+            }, {
+              position: new google.maps.LatLng(-33.916365282092855, 151.22937399734496),
+              type: 'parking'
+            }, {
+              position: new google.maps.LatLng(-33.91665018901448, 151.2282474695587),
+              type: 'parking'
+            }, {
+              position: new google.maps.LatLng(-33.919543720969806, 151.23112279762267),
+              type: 'parking'
+            }, {
+              position: new google.maps.LatLng(-33.91608037421864, 151.23288232673644),
+              type: 'parking'
+            }, {
+              position: new google.maps.LatLng(-33.91851096391805, 151.2344058214569),
+              type: 'parking'
+            }, {
+              position: new google.maps.LatLng(-33.91818154739766, 151.2346203981781),
+              type: 'parking'
+            }, {
+              position: new google.maps.LatLng(-33.91727341958453, 151.23348314155578),
+              type: 'library'
+            }
+          ];
+  
+          // Create markers.
+          for (var i = 0; i < features.length; i++) {
+            var marker = new google.maps.Marker({
+              position: features[i].position,
+              icon: icons[features[i].type].icon,
+              map: map
+            });
+          };
+        }
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAWvLkjNBTUAURo0rs_rxHHyR-wCuiG_XA&callback=initMap"
+      async defer></script>
